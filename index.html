@@ -212,7 +212,24 @@
                 </div>
             </div>
 
-            <div id="api-alert" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-xl text-amber-800 text-sm">
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-blue-100 mt-6">
+                <h3 class="font-bold text-slate-800 mb-4">Listado de Proyectos Registrados</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="text-xs font-bold text-slate-400 uppercase border-b">
+                                <th class="pb-3">Nombre del Proyecto</th>
+                                <th class="pb-3">Responsable</th>
+                                <th class="pb-3 text-right">Cédula</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-projects-list">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="api-alert" class="hidden bg-amber-50 border border-amber-200 p-4 rounded-xl text-amber-800 text-sm mt-6">
                 <div class="flex items-center">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
                     <span><strong>Nota:</strong> No se pudo recuperar el listado completo. Asegúrese de que el backend soporte la acción de lectura global.</span>
@@ -238,7 +255,6 @@
             const dashboardView = document.getElementById('dashboard-view');
             const tabRegistro = document.getElementById('tab-registro');
             const tabDashboard = document.getElementById('tab-dashboard');
-
             if (tab === 'registro') {
                 registroView.classList.remove('hidden');
                 dashboardView.classList.add('hidden');
@@ -276,7 +292,6 @@
                 }
                 return [];
             };
-
             try {
                 const response = await fetch(scriptURL + '?action=readAll', { method: 'GET' });
                 if (!response.ok) throw new Error("Error en la respuesta del servidor");
@@ -308,7 +323,7 @@
             }, 0) / total).toFixed(1) : 0;
             const altaPrioridad = data.filter(p => (p.prioridad || '').toLowerCase() === 'alta').length;
             const regionalesUnicas = new Set(data.map(p => p.regional).filter(r => r)).size;
-
+            
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-avance').innerText = `${avgAvance}%`;
             document.getElementById('stat-alta').innerText = altaPrioridad;
@@ -320,13 +335,36 @@
                 labels: Object.keys(regionalesCount),
                 datasets: [{ label: 'Proyectos', data: Object.values(regionalesCount), backgroundColor: 'rgba(37, 99, 235, 0.6)', borderColor: 'rgb(37, 99, 235)', borderWidth: 1 }]
             });
-
+            
             const talleresCount = {};
             data.forEach(p => { const tall = p.taller || 'No especificado'; talleresCount[tall] = (talleresCount[tall] || 0) + 1; });
             renderChart('chartTalleres', 'doughnut', {
                 labels: Object.keys(talleresCount),
                 datasets: [{ data: Object.values(talleresCount), backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b'] }]
             });
+
+            // ==========================================
+            // NUEVO: RENDERIZADO DEL LISTADO DE PROYECTOS
+            // ==========================================
+            const listBody = document.getElementById('dashboard-projects-list');
+            if (listBody) {
+                listBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
+                
+                data.forEach(p => {
+                    const nombre = p.nombre || p.nombreProyecto || 'Proyecto sin nombre';
+                    const responsable = p.responsable || 'N/A'; // Agregamos la variable responsable
+                    const cedula = p.cedula || 'N/A';
+                    
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b hover:bg-slate-50 transition-colors";
+                    tr.innerHTML = `
+                        <td class="py-3 font-medium text-slate-700">${nombre}</td>
+                        <td class="py-3 text-slate-600">${responsable}</td>
+                        <td class="py-3 text-right text-slate-600 font-mono text-sm">${cedula}</td>
+                    `;
+                    listBody.appendChild(tr);
+                });
+            }
         }
 
         function renderChart(id, type, data) {
@@ -359,7 +397,6 @@
             toggleLoader(true);
             const searchResults = document.getElementById('search-results');
             searchResults.classList.add('hidden');
-            
             try {
                 console.log("Buscando cédula:", cedulaBusqueda);
                 const response = await fetch(scriptURL, {
@@ -370,8 +407,8 @@
                 console.log("Resultado búsqueda:", data);
 
                 const records = (data.status === 'success' || data.status === 'ok') ?
-                    (Array.isArray(data.data) ? data.data : (data.data ? [data.data] : [])) : [];
-
+                (Array.isArray(data.data) ? data.data : (data.data ? [data.data] : [])) : [];
+                
                 if (records.length === 0 || (records.length === 1 && !records[0].nombre && !records[0].nombreProyecto)) {
                     const fallbackResponse = await fetch(scriptURL + '?buscarCedula=' + encodeURIComponent(cedulaBusqueda));
                     const fallbackData = await fallbackResponse.json();
@@ -468,7 +505,6 @@
             }
 
             toggleLoader(true);
-
             const payload = {
                 action: 'insert',
                 regional: document.getElementById('regional').value,
@@ -484,7 +520,6 @@
                 recomendaciones: document.getElementById('recomendaciones').value,
                 progreso: document.getElementById('progreso').value
             };
-
             console.log("Enviando registro:", payload);
             
             try {
@@ -494,7 +529,8 @@
                     body: JSON.stringify(payload)
                 });
                 
-                const data = await response.json(); // Leemos lo que nos dice Google Script
+                const data = await response.json();
+                // Leemos lo que nos dice Google Script
 
                 if (data.status === 'error') {
                     // Si el servidor encontró un duplicado, mostramos el error y NO borramos el form
@@ -548,7 +584,6 @@
             setTimeout(() => {
                 toast.classList.remove('translate-y-10', 'opacity-0');
             }, 100);
-
             setTimeout(() => {
                 toast.classList.add('translate-y-10', 'opacity-0');
                 setTimeout(() => toast.remove(), 4000);
@@ -557,7 +592,5 @@
     </script>
 </body>
 </html>
-
-
 
 
