@@ -76,6 +76,9 @@
                 </div>
 
                 <form id="innovationForm" class="p-8 space-y-8">
+                    
+                    <input type="hidden" id="recordId" value="">
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Regional / Sede *</label>
@@ -323,7 +326,6 @@
             }, 0) / total).toFixed(1) : 0;
             const altaPrioridad = data.filter(p => (p.prioridad || '').toLowerCase() === 'alta').length;
             const regionalesUnicas = new Set(data.map(p => p.regional).filter(r => r)).size;
-            
             document.getElementById('stat-total').innerText = total;
             document.getElementById('stat-avance').innerText = `${avgAvance}%`;
             document.getElementById('stat-alta').innerText = altaPrioridad;
@@ -335,24 +337,19 @@
                 labels: Object.keys(regionalesCount),
                 datasets: [{ label: 'Proyectos', data: Object.values(regionalesCount), backgroundColor: 'rgba(37, 99, 235, 0.6)', borderColor: 'rgb(37, 99, 235)', borderWidth: 1 }]
             });
-            
             const talleresCount = {};
             data.forEach(p => { const tall = p.taller || 'No especificado'; talleresCount[tall] = (talleresCount[tall] || 0) + 1; });
             renderChart('chartTalleres', 'doughnut', {
                 labels: Object.keys(talleresCount),
                 datasets: [{ data: Object.values(talleresCount), backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#64748b'] }]
             });
-
-            // ==========================================
-            // NUEVO: RENDERIZADO DEL LISTADO DE PROYECTOS
-            // ==========================================
+            
             const listBody = document.getElementById('dashboard-projects-list');
             if (listBody) {
-                listBody.innerHTML = ''; // Limpiar la tabla antes de llenarla
-                
+                listBody.innerHTML = '';
                 data.forEach(p => {
                     const nombre = p.nombre || p.nombreProyecto || 'Proyecto sin nombre';
-                    const responsable = p.responsable || 'N/A'; // Agregamos la variable responsable
+                    const responsable = p.responsable || 'N/A';
                     const cedula = p.cedula || 'N/A';
                     
                     const tr = document.createElement('tr');
@@ -408,12 +405,10 @@
 
                 const records = (data.status === 'success' || data.status === 'ok') ?
                 (Array.isArray(data.data) ? data.data : (data.data ? [data.data] : [])) : [];
-                
                 if (records.length === 0 || (records.length === 1 && !records[0].nombre && !records[0].nombreProyecto)) {
                     const fallbackResponse = await fetch(scriptURL + '?buscarCedula=' + encodeURIComponent(cedulaBusqueda));
                     const fallbackData = await fallbackResponse.json();
                     const fallbackRecords = (fallbackData.status === 'success') ? (Array.isArray(fallbackData.data) ? fallbackData.data : [fallbackData.data]) : [];
-                    
                     if (fallbackRecords.length > 0) {
                         if (fallbackRecords.length === 1) cargarProyecto(fallbackRecords[0]);
                         else mostrarListaProyectos(fallbackRecords);
@@ -461,7 +456,12 @@
         }
 
         function cargarProyecto(p) {
-            console.log("Cargando proyecto:", p);
+            console.log("Cargando proyecto (EDICIÓN):", p);
+            
+            // 1. Guardamos el ID para saber que vamos a editar
+            document.getElementById('recordId').value = p.id || '';
+
+            // 2. Llenamos el formulario
             document.getElementById('regional').value = p.regional || '';
             document.getElementById('taller').value = p.taller || '';
             document.getElementById('nombreProyecto').value = p.nombre || p.nombreProyecto || '';
@@ -475,7 +475,15 @@
             document.getElementById('progreso').value = prog;
             document.getElementById('progresoValor').textContent = `${prog}%`;
             setPriority(p.prioridad || '');
+
+            // 3. Cambiamos el botón para indicar actualización
+            const btn = document.getElementById('btnGuardar');
+            btn.innerText = "Actualizar Registro";
+            btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            btn.classList.add('bg-orange-500', 'hover:bg-orange-600');
+
             document.getElementById('search-results').classList.add('hidden');
+            showToast("Modo edición activado.");
         }
 
         const progreso = document.getElementById('progreso');
@@ -484,12 +492,11 @@
         });
 
         // =========================================================
-        // BLOQUE CORREGIDO: VALIDACIÓN DE DUPLICADOS ACTIVA
+        // VALIDACIÓN Y ENVÍO (INSERTAR O ACTUALIZAR)
         // =========================================================
         document.getElementById('innovationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Validaciones básicas
             const email = document.getElementById('email').value;
             const cedula = document.getElementById('cedula').value;
             const telefono = document.getElementById('telefono').value;
@@ -505,8 +512,14 @@
             }
 
             toggleLoader(true);
+            
+            // Verificamos si es una actualización (si hay ID) o una inserción
+            const recordId = document.getElementById('recordId').value;
+            const actionType = recordId ? 'update' : 'insert';
+
             const payload = {
-                action: 'insert',
+                action: actionType,
+                id: recordId, // Enviamos el ID (vacío si es nuevo)
                 regional: document.getElementById('regional').value,
                 taller: document.getElementById('taller').value,
                 nombre: document.getElementById('nombreProyecto').value,
@@ -520,24 +533,22 @@
                 recomendaciones: document.getElementById('recomendaciones').value,
                 progreso: document.getElementById('progreso').value
             };
-            console.log("Enviando registro:", payload);
+            
+            console.log(`Enviando solicitud (${actionType}):`, payload);
             
             try {
-                // AQUÍ ESTABA EL ERROR: Se eliminó mode: 'no-cors' para leer la respuesta JSON del servidor
                 const response = await fetch(scriptURL, {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
                 
                 const data = await response.json();
-                // Leemos lo que nos dice Google Script
 
                 if (data.status === 'error') {
-                    // Si el servidor encontró un duplicado, mostramos el error y NO borramos el form
                     showToast("⚠️ " + data.message, "error");
                 } else {
-                    // Si todo salió bien
-                    showToast('✅ Registro enviado satisfactoriamente.');
+                    const msg = actionType === 'update' ? '✅ Registro actualizado correctamente.' : '✅ Registro creado satisfactoriamente.';
+                    showToast(msg);
                     limpiarFormulario();
                     document.getElementById('progresoValor').textContent = '0%';
                     setPriority('');
@@ -553,6 +564,14 @@
 
         function limpiarFormulario() {
             document.getElementById('innovationForm').reset();
+            
+            // Limpiar ID y restaurar botón
+            document.getElementById('recordId').value = '';
+            const btn = document.getElementById('btnGuardar');
+            btn.innerText = "Guardar Registro";
+            btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            btn.classList.remove('bg-orange-500', 'hover:bg-orange-600');
+
             document.getElementById('progresoValor').textContent = '0%';
             setPriority('');
         }
@@ -592,5 +611,3 @@
     </script>
 </body>
 </html>
-
-
