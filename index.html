@@ -37,16 +37,16 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-6 flex-grow">
+    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-6 flex-grow w-full">
         
-        <div id="registro-view" class="space-y-6 animate-fade-in">
+        <div id="registro-view" class="space-y-8 animate-fade-in max-w-4xl mx-auto">
             <div class="bg-white p-4 rounded-2xl shadow-lg border border-blue-100 flex flex-col md:flex-row gap-4 items-center">
                 <div class="flex-1 w-full">
                     <label for="busquedaCedula" class="text-xs font-bold text-slate-500 uppercase ml-2">Consultar Registro por Cédula</label>
                     <div class="relative">
                         <input type="text" id="busquedaCedula" placeholder="000-0000000-0" 
-                            class="w-full pl-4 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono">
-                        <button onclick="buscarPorCedula()" class="absolute right-2 top-2 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
+                            class="w-full pl-4 pr-12 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none font-mono shadow-sm">
+                        <button onclick="buscarPorCedula()" class="absolute right-3 top-3 p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </button>
                     </div>
@@ -81,10 +81,10 @@
                 <form id="innovationForm" class="p-8 space-y-8">
                     <input type="hidden" id="recordId" value="">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Regional / Sede *</label>
-                            <select id="regional" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                            <select id="regional" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                                 <option value="">Seleccione...</option>
                                 <option value="Cibao Norte">Cibao Norte</option>
                                 <option value="Cibao Sur">Cibao Sur</option>
@@ -98,7 +98,7 @@
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Taller Responsable *</label>
-                            <select id="taller" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                            <select id="taller" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                                 <option value="">Seleccione Taller...</option>
                                 <option value="Electrónica">Electrónica</option>
                                 <option value="Informática">Informática</option>
@@ -116,45 +116,45 @@
                         </div>
                     </div>
 
-                    <div class="space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Nombre del Proyecto *</label>
-                                <input type="text" id="nombreProyecto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                                <input type="text" id="nombreProyecto" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Cédula del Responsable *</label>
-                                <input type="text" id="cedula" required placeholder="000-0000000-0" class="w-full bg-blue-50 border-2 border-blue-100 rounded-xl p-3 outline-none font-bold text-blue-800">
+                                <input type="text" id="cedula" required placeholder="000-0000000-0" class="w-full bg-blue-50 border-2 border-blue-100 rounded-xl p-4 outline-none font-bold text-blue-800 focus:ring-2 focus:ring-blue-500 transition-all">
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Nombre Responsable</label>
-                                <input type="text" id="responsable" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                                <input type="text" id="responsable" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Teléfono</label>
-                                <input type="tel" id="telefono" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                                <input type="tel" id="telefono" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-slate-700 mb-2">Correo</label>
-                                <input type="email" id="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none">
+                                <input type="email" id="email" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 bg-blue-50/50 rounded-2xl border border-blue-100">
                         <div>
                             <label class="block text-sm font-bold text-blue-800 mb-2">Fecha Último Seguimiento *</label>
-                            <input type="date" id="fechaSeguimiento" required class="w-full bg-white border border-blue-200 rounded-xl p-3 outline-none">
+                            <input type="date" id="fechaSeguimiento" required class="w-full bg-white border border-blue-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-blue-800 mb-2">Prioridad</label>
                             <div class="flex gap-2">
-                                <button type="button" onclick="setPriority('Baja')" class="priority-btn flex-1 py-2 rounded-lg border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs">Baja</button>
-                                <button type="button" onclick="setPriority('Media')" class="priority-btn flex-1 py-2 rounded-lg border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs">Media</button>
-                                <button type="button" onclick="setPriority('Alta')" class="priority-btn flex-1 py-2 rounded-lg border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs">Alta</button>
+                                <button type="button" onclick="setPriority('Baja')" class="priority-btn flex-1 py-4 rounded-xl border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs hover:border-blue-300 transition-all">Baja</button>
+                                <button type="button" onclick="setPriority('Media')" class="priority-btn flex-1 py-4 rounded-xl border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs hover:border-blue-300 transition-all">Media</button>
+                                <button type="button" onclick="setPriority('Alta')" class="priority-btn flex-1 py-4 rounded-xl border-2 border-slate-200 font-bold text-slate-500 bg-white text-xs hover:border-blue-300 transition-all">Alta</button>
                             </div>
                             <input type="hidden" id="prioridad" value="">
                         </div>
@@ -162,7 +162,7 @@
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Recomendaciones y Mejoras</label>
-                        <textarea id="recomendaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 outline-none"></textarea>
+                        <textarea id="recomendaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all"></textarea>
                     </div>
 
                     <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
@@ -214,7 +214,7 @@
                 </div>
         
                 <div id="grid-papelera" class="flex-1 space-y-3 overflow-y-auto mb-4 p-2 bg-slate-200/50 rounded-xl border-inner shadow-inner">
-                    </div>
+                </div>
         
                 <button onclick="procesarEliminacion()" id="btn-vaciar" class="w-full py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold shadow-lg opacity-50 cursor-not-allowed transition-all transform active:scale-95" disabled>
                     Vaciar Papelera
@@ -294,17 +294,14 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzMLSr8RG5yksGorBWK0biCrXHYQ4yqBwdFS3r8Bv3JrS4aNX-dqXruDCpk7z8r3z0/exec';
         let charts = {};
         
-        // --- VARIABLES GLOBALES PARA FICHAS ---
         let proyectosGlobales = [];
         let proyectosAborrar = new Set();
 
         function switchTab(tab) {
-            // Ocultar todo
             document.getElementById('registro-view').classList.add('hidden');
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('fichas-view').classList.add('hidden');
             
-            // Resetear botones
             const baseClass = "px-4 py-2 rounded-lg font-medium text-sm transition-all text-slate-600 hover:bg-slate-50";
             const activeClass = "bg-blue-50 text-blue-700".split(" ");
             
@@ -312,7 +309,6 @@
             document.getElementById('tab-dashboard').className = baseClass;
             document.getElementById('tab-fichas').className = baseClass;
 
-            // Activar selección
             if (tab === 'registro') {
                 document.getElementById('registro-view').classList.remove('hidden');
                 document.getElementById('tab-registro').classList.remove('text-slate-600');
@@ -330,8 +326,7 @@
             }
         }
 
-        // --- FUNCIONES DEL DASHBOARD Y CARGA DE DATOS ---
-
+        // --- DASHBOARD ---
         async function actualizarDashboard() {
             toggleLoader(true);
             document.getElementById('api-alert').classList.add('hidden');
@@ -341,7 +336,7 @@
                 const rawData = await response.json();
                 
                 const records = (rawData.status === 'success' && Array.isArray(rawData.data)) ? rawData.data : [];
-                proyectosGlobales = records; // Guardar copia para Fichas
+                proyectosGlobales = records; 
                 
                 renderDashboard(records);
             } catch (error) {
@@ -402,12 +397,10 @@
             charts[id] = new Chart(ctx, { type: type, data: data, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: type === 'doughnut' ? 'right' : 'top' } } } });
         }
 
-        // --- FUNCIONES DEL MÓDULO DE FICHAS Y PAPELERA ---
-
+        // --- FICHAS Y PAPELERA ---
         async function cargarVistaFichas() {
-            // Si no tenemos datos, cargamos. Si tenemos, usamos caché local.
             if (proyectosGlobales.length === 0) {
-                await actualizarDashboard(); // Esto llena proyectosGlobales
+                await actualizarDashboard();
             }
             renderizarFichas();
         }
@@ -428,14 +421,9 @@
             proyectosGlobales.forEach(p => {
                 const esPapelera = proyectosAborrar.has(p.id.toString());
                 const fichaHTML = crearHTMLFicha(p, esPapelera);
-                
-                if (esPapelera) {
-                    contenedorPapelera.appendChild(fichaHTML);
-                } else {
-                    contenedorActivos.appendChild(fichaHTML);
-                }
+                if (esPapelera) contenedorPapelera.appendChild(fichaHTML);
+                else contenedorActivos.appendChild(fichaHTML);
             });
-            
             actualizarBotonPapelera();
         }
 
@@ -446,7 +434,6 @@
             div.ondragstart = (ev) => drag(ev, p.id);
             
             if (enPapelera) {
-                // Estilo para ficha en Papelera
                 div.className = "bg-white p-3 rounded-lg shadow-sm border-l-4 border-red-500 cursor-grab draggable-card opacity-80 text-sm flex justify-between items-center group";
                 div.innerHTML = `
                     <div class="truncate flex-1">
@@ -458,7 +445,6 @@
                     </div>
                 `;
             } else {
-                // Estilo para ficha Activa
                 div.className = "bg-white p-4 rounded-xl shadow-md border border-slate-100 hover:shadow-lg transition-all draggable-card border-l-4 border-blue-500 relative group";
                 div.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
@@ -483,9 +469,8 @@
 
         function allowDrop(ev) {
             ev.preventDefault();
-            const zone = document.getElementById('zona-papelera');
             if (ev.currentTarget.id === 'zona-papelera') {
-                zone.classList.add('trash-zone-active');
+                document.getElementById('zona-papelera').classList.add('trash-zone-active');
             }
         }
 
@@ -496,15 +481,10 @@
         function drop(ev, destino) {
             ev.preventDefault();
             const id = ev.dataTransfer.getData("text");
-            const zone = document.getElementById('zona-papelera');
-            zone.classList.remove('trash-zone-active');
+            document.getElementById('zona-papelera').classList.remove('trash-zone-active');
 
-            if (destino === 'papelera') {
-                proyectosAborrar.add(id.toString());
-            } else {
-                // Sacar de la papelera
-                proyectosAborrar.delete(id.toString());
-            }
+            if (destino === 'papelera') proyectosAborrar.add(id.toString());
+            else proyectosAborrar.delete(id.toString());
             renderizarFichas();
         }
 
@@ -524,44 +504,33 @@
         }
 
         async function procesarEliminacion() {
-            if (!confirm(`ADVERTENCIA: ¿Estás seguro de que deseas eliminar permanentemente ${proyectosAborrar.size} registro(s)? Esta acción no se puede deshacer.`)) return;
-
+            if (!confirm(`ADVERTENCIA: ¿Estás seguro de que deseas eliminar permanentemente ${proyectosAborrar.size} registro(s)?`)) return;
             toggleLoader(true);
             const idsParaBorrar = Array.from(proyectosAborrar);
             let errores = 0;
-
-            // Procesar eliminaciones una por una
             for (const id of idsParaBorrar) {
                 try {
                     const response = await fetch(scriptURL, {
-                        method: 'POST',
-                        body: JSON.stringify({ action: 'delete', id: id })
+                        method: 'POST', body: JSON.stringify({ action: 'delete', id: id })
                     });
                     const res = await response.json();
                     if(res.status === 'error') errores++;
-                } catch (e) {
-                    console.error(e);
-                    errores++;
-                }
+                } catch (e) { errores++; }
             }
-
             if (errores === 0) {
                 showToast("✅ Registros eliminados correctamente");
                 proyectosAborrar.clear();
-                // Recargar datos frescos
                 await actualizarDashboard();
                 renderizarFichas();
             } else {
                 showToast("⚠️ Hubo un error al eliminar algunos registros", "error");
-                // Recargar para ver estado real
                 await actualizarDashboard();
                 renderizarFichas();
             }
             toggleLoader(false);
         }
 
-        // --- FUNCIONES DE REGISTRO (EXISTENTES) ---
-
+        // --- REGISTRO Y BÚSQUEDA ---
         function setPriority(level) {
             if (!level) return;
             const mapping = { 'baja': 'low', 'media': 'medium', 'alta': 'high' };
@@ -571,11 +540,8 @@
             const buttons = document.querySelectorAll('.priority-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('active-high', 'active-medium', 'active-low', 'text-white', 'bg-white');
-                if(btn.innerText.toLowerCase() === normalizedLevel) {
-                    btn.classList.add('active-' + activeClass, 'text-white');
-                } else {
-                    btn.classList.add('bg-white');
-                }
+                if(btn.innerText.toLowerCase() === normalizedLevel) btn.classList.add('active-' + activeClass, 'text-white');
+                else btn.classList.add('bg-white');
             });
         }
 
@@ -592,25 +558,13 @@
                     body: JSON.stringify({ action: 'search', buscarCedula: cedulaBusqueda })
                 });
                 const data = await response.json();
-                
                 const records = (data.status === 'success' || data.status === 'ok') ?
                 (Array.isArray(data.data) ? data.data : (data.data ? [data.data] : [])) : [];
                 
-                if (records.length === 0) {
-                    showToast("❌ No se encontró ningún registro con esa cédula.", "error");
-                } else if (records.length === 1) {
-                    cargarProyecto(records[0]);
-                    showToast("✅ Registro encontrado.");
-                } else {
-                    mostrarListaProyectos(records);
-                    showToast(`✅ Se encontraron ${records.length} proyectos.`);
-                }
-            } catch (error) {
-                console.error(error);
-                showToast("Error al conectar con la base de datos.", "error");
-            } finally {
-                toggleLoader(false);
-            }
+                if (records.length === 0) showToast("❌ No se encontró ningún registro con esa cédula.", "error");
+                else if (records.length === 1) { cargarProyecto(records[0]); showToast("✅ Registro encontrado."); }
+                else { mostrarListaProyectos(records); showToast(`✅ Se encontraron ${records.length} proyectos.`); }
+            } catch (error) { showToast("Error al conectar con la base de datos.", "error"); } finally { toggleLoader(false); }
         }
 
         function mostrarListaProyectos(proyectos) {
@@ -624,12 +578,7 @@
                     <td class="py-3 font-medium text-slate-700">${p.nombre || p.nombreProyecto}</td>
                     <td class="py-3 text-slate-600">${p.responsable}</td>
                     <td class="py-3 text-slate-600">${p.regional}</td>
-                    <td class="py-3 text-right">
-                        <button onclick='cargarProyecto(${JSON.stringify(p).replace(/'/g, "&apos;")})'
-                            class="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-bold hover:bg-blue-200">
-                            Cargar
-                        </button>
-                    </td>
+                    <td class="py-3 text-right"><button onclick='cargarProyecto(${JSON.stringify(p).replace(/'/g, "&apos;")})' class="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-bold hover:bg-blue-200">Cargar</button></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -657,7 +606,6 @@
             btn.innerText = "Actualizar Registro";
             btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             btn.classList.add('bg-orange-500', 'hover:bg-orange-600');
-
             document.getElementById('search-results').classList.add('hidden');
             showToast("Modo edición activado.");
         }
@@ -669,13 +617,10 @@
         document.getElementById('innovationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             toggleLoader(true);
-            
             const recordId = document.getElementById('recordId').value;
             const actionType = recordId ? 'update' : 'insert';
-
             const payload = {
-                action: actionType,
-                id: recordId,
+                action: actionType, id: recordId,
                 regional: document.getElementById('regional').value,
                 taller: document.getElementById('taller').value,
                 nombre: document.getElementById('nombreProyecto').value,
@@ -689,28 +634,17 @@
                 recomendaciones: document.getElementById('recomendaciones').value,
                 progreso: document.getElementById('progreso').value
             };
-            
             try {
-                const response = await fetch(scriptURL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
+                const response = await fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) });
                 const data = await response.json();
-
-                if (data.status === 'error') {
-                    showToast("⚠️ " + data.message, "error");
-                } else {
+                if (data.status === 'error') showToast("⚠️ " + data.message, "error");
+                else {
                     const msg = actionType === 'update' ? '✅ Registro actualizado correctamente.' : '✅ Registro creado satisfactoriamente.';
                     showToast(msg);
                     limpiarFormulario();
                     actualizarDashboard();
                 }
-            } catch (err) {
-                console.error(err);
-                showToast('Error de conexión: ' + err.message, 'error');
-            } finally {
-                toggleLoader(false);
-            }
+            } catch (err) { showToast('Error de conexión: ' + err.message, 'error'); } finally { toggleLoader(false); }
         });
 
         function limpiarFormulario() {
@@ -733,13 +667,8 @@
 
         function toggleLoader(show) {
             const loader = document.getElementById('global-loader');
-            if (show) {
-                loader.classList.remove('hidden');
-                loader.classList.add('flex');
-            } else {
-                loader.classList.add('hidden');
-                loader.classList.remove('flex');
-            }
+            if (show) { loader.classList.remove('hidden'); loader.classList.add('flex'); }
+            else { loader.classList.add('hidden'); loader.classList.remove('flex'); }
         }
 
         function showToast(message, type = 'success') {
@@ -747,7 +676,6 @@
             toast.className = `fixed bottom-4 right-4 px-6 py-3 rounded-xl shadow-2xl text-white font-bold transform transition-all translate-y-10 opacity-0 z-[100] ${type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}`;
             toast.innerText = message;
             document.body.appendChild(toast);
-
             setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 100);
             setTimeout(() => { toast.classList.add('translate-y-10', 'opacity-0'); setTimeout(() => toast.remove(), 4000); }, 4000);
         }
