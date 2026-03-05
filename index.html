@@ -23,7 +23,38 @@
 </head>
 <body class="bg-gradient-to-br from-slate-100 to-blue-50 min-h-screen flex flex-col">
 
-    <header class="bg-white shadow-sm border-b border-blue-100 sticky top-0 z-50">
+    <!-- Pantalla de Login -->
+    <div id="login-screen" class="fixed inset-0 z-[200] flex items-center justify-center bg-slate-900/60 backdrop-blur-md">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-slate-100">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl mx-auto mb-4 shadow-lg">I</div>
+                <h2 class="text-2xl font-extrabold text-slate-800">Sistema de Innovación</h2>
+                <p class="text-slate-500 font-medium mt-1">Gestión de Proyectos Regionales</p>
+            </div>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Tipo de Usuario</label>
+                    <select id="loginRole" onchange="updateLoginFields()" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium">
+                        <option value="general">Usuario General</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+
+                <div id="passwordContainer" class="hidden">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Contraseña de Acceso</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all font-mono">
+                </div>
+
+                <button onclick="iniciarSesion()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-xl transition-all transform active:scale-95 flex items-center justify-center space-x-2">
+                    <span>Entrar al Sistema</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <header id="app-header" class="bg-white shadow-sm border-b border-blue-100 sticky top-0 z-50 hidden">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">I</div>
@@ -37,7 +68,7 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto p-4 md:p-8 space-y-6 flex-grow w-full">
+    <main id="app-main" class="max-w-6xl mx-auto p-4 md:p-8 space-y-6 flex-grow w-full hidden">
         
         <div id="registro-view" class="space-y-8 animate-fade-in max-w-4xl mx-auto">
             <div class="bg-white p-4 rounded-2xl shadow-lg border border-blue-100 flex flex-col md:flex-row gap-4 items-center">
@@ -292,12 +323,65 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzMLSr8RG5yksGorBWK0biCrXHYQ4yqBwdFS3r8Bv3JrS4aNX-dqXruDCpk7z8r3z0/exec';
+        let userRole = 'none';
         let charts = {};
+
+        function updateLoginFields() {
+            const role = document.getElementById('loginRole').value;
+            const passContainer = document.getElementById('passwordContainer');
+            if (role === 'admin') {
+                passContainer.classList.remove('hidden');
+            } else {
+                passContainer.classList.add('hidden');
+            }
+        }
+
+        function iniciarSesion() {
+            const role = document.getElementById('loginRole').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (role === 'admin') {
+                if (password === 'innovacion2026') {
+                    finalizarLogin('admin');
+                } else {
+                    showToast("Contraseña incorrecta", "error");
+                }
+            } else {
+                finalizarLogin('general');
+            }
+        }
+
+        function finalizarLogin(role) {
+            userRole = role;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-header').classList.remove('hidden');
+            document.getElementById('app-main').classList.remove('hidden');
+
+            if (role === 'general') {
+                document.getElementById('tab-fichas').classList.add('hidden');
+                document.getElementById('tab-dashboard').classList.add('hidden');
+            }
+
+            showToast(`Bienvenido, sesión iniciada como ${role === 'admin' ? 'Administrador' : 'Usuario General'}`);
+            switchTab('registro');
+        }
+
+        // Permitir login con Enter
+        document.getElementById('loginPassword').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                iniciarSesion();
+            }
+        });
         
         let proyectosGlobales = [];
         let proyectosAborrar = new Set();
 
         function switchTab(tab) {
+            if (userRole === 'general' && (tab === 'fichas' || tab === 'dashboard')) {
+                showToast("Acceso restringido para este usuario", "error");
+                return;
+            }
+
             document.getElementById('registro-view').classList.add('hidden');
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('fichas-view').classList.add('hidden');
@@ -306,8 +390,8 @@
             const activeClass = "bg-blue-50 text-blue-700".split(" ");
             
             document.getElementById('tab-registro').className = baseClass;
-            document.getElementById('tab-dashboard').className = baseClass;
-            document.getElementById('tab-fichas').className = baseClass;
+            document.getElementById('tab-dashboard').className = baseClass + (userRole === 'general' ? ' hidden' : '');
+            document.getElementById('tab-fichas').className = baseClass + (userRole === 'general' ? ' hidden' : '');
 
             if (tab === 'registro') {
                 document.getElementById('registro-view').classList.remove('hidden');
