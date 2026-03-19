@@ -127,7 +127,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label class="block text-sm font-bold text-slate-700 mb-2">Regional / Sede *</label>
-                            <select id="regional" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                            <select id="regional" required onchange="actualizarTalleres(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 outline-none focus:ring-2 focus:ring-blue-500 transition-all">
                                 <option value="">Seleccione...</option>
                                 <option value="Cibao Norte">Cibao Norte</option>
                                 <option value="Cibao Sur">Cibao Sur</option>
@@ -136,7 +136,7 @@
                                 <option value="Norte">Regional Norte</option>
                                 <option value="Sur">Regional Sur</option>
                                 <option value="Este">Regional Este</option>
-                                <option value="ECI">ECI</option>
+                                <option value="ECI/ONA">ECI/ONA</option>
                             </select>
                         </div>
                         <div>
@@ -724,9 +724,51 @@
             searchResults.scrollIntoView({ behavior: 'smooth' });
         }
 
+        function actualizarTalleres(regionalSeleccionada) {
+            const tallerSelect = document.getElementById('taller');
+            const tallerOriginal = tallerSelect.value;
+            tallerSelect.innerHTML = '<option value="">Seleccione Taller...</option>';
+
+            const talleresDefault = [
+                "Electrónica", "Informática", "Mecánica", "Mecánica Industrial",
+                "Gastronomía y Hotelería", "Ebanistería", "Salud y bienestar",
+                "Artes Gráficas", "Electricidad", "Confecion y diseño",
+                "Ebanisteria", "Desabolladura y pintura"
+            ];
+
+            const talleresECI = [
+                "Subdirección General", "Dirección de Control Interno",
+                "Dirección de Planificación y Desarrollo", "Dirección de Administración y Finanzas",
+                "Dirección de Formación Profesional", "Dirección de Competitividad Empresarial",
+                "Dirección Docente y Formación Especializada", "Dirección de Gestión Humana",
+                "Dirección de Comunicaciones", "Dirección de TI y Comunicaciones",
+                "Dirección de Consultoría Jurídica", "Dirección de Registro y Certificados",
+                "Dirección de Asuntos Internacionales e Interinstitucionales",
+                "Dirección de Calidad en la Gestión", "Dirección de Ingresos",
+                "Dirección de Rectoría y Regulación de Centros", "Direccion de innovacion",
+                "Secretaria General y correspondencia"
+            ];
+
+            const listaATrabajar = (regionalSeleccionada === 'ECI/ONA' || regionalSeleccionada === 'ECI') ? talleresECI : talleresDefault;
+
+            listaATrabajar.forEach(taller => {
+                const option = document.createElement('option');
+                option.value = taller;
+                option.textContent = taller;
+                tallerSelect.appendChild(option);
+            });
+
+            if ([...tallerSelect.options].some(opt => opt.value === tallerOriginal)) {
+                tallerSelect.value = tallerOriginal;
+            }
+        }
+
         function cargarProyecto(p) {
+            const reg = (p.regional === 'ECI') ? 'ECI/ONA' : (p.regional || '');
+            actualizarTalleres(reg);
+
             document.getElementById('recordId').value = p.id || '';
-            document.getElementById('regional').value = p.regional || '';
+            document.getElementById('regional').value = reg;
             document.getElementById('taller').value = p.taller || '';
             document.getElementById('nombreProyecto').value = p.nombre || p.nombreProyecto || '';
             document.getElementById('cedula').value = p.cedula || '';
@@ -787,6 +829,7 @@
 
         function limpiarFormulario() {
             document.getElementById('innovationForm').reset();
+            actualizarTalleres('');
             document.getElementById('recordId').value = '';
             const btn = document.getElementById('btnGuardar');
             btn.innerText = "Guardar Registro";
